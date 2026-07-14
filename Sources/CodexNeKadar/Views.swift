@@ -223,55 +223,51 @@ struct StatusBarLabel: View {
 private struct StatusBarArtwork: View {
     let title: String
 
-    private let red = Color(red: 0.93, green: 0.12, blue: 0.15)
+    private let ink = Color(red: 0.16, green: 0.16, blue: 0.16)
+    private let accent = Color(red: 0.48, green: 0.16, blue: 0.18)
     private var percentages: [String] { title.components(separatedBy: " / ") }
 
     var body: some View {
-        HStack(spacing: 5) {
+        HStack(spacing: 4) {
             CodexMenuBadge()
-                .frame(width: 17, height: 17)
+                .frame(width: 15, height: 15)
 
             HStack(spacing: 3) {
                 ForEach(Array(percentages.enumerated()), id: \.offset) { index, percentage in
                     if index > 0 {
                         Text("/")
-                            .foregroundStyle(Color.black)
+                            .foregroundStyle(accent)
                     }
 
                     Text(percentage)
-                        .foregroundStyle(red)
+                        .foregroundStyle(ink)
                 }
             }
-            .font(.system(size: 12, weight: .bold, design: .monospaced))
+            .font(.system(size: 11.5, weight: .semibold, design: .monospaced))
             .monospacedDigit()
         }
     }
 }
 
 private struct CodexMenuBadge: View {
-    private let red = Color(red: 0.93, green: 0.12, blue: 0.15)
+    private let ink = Color(red: 0.16, green: 0.16, blue: 0.16)
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 4, style: .continuous)
-                .fill(red)
-
-            ZStack {
-                ForEach(0..<3, id: \.self) { index in
-                    Capsule()
-                        .stroke(Color.black, lineWidth: 1.25)
-                        .frame(width: 10, height: 5)
-                        .rotationEffect(.degrees(Double(index) * 60))
-                }
-
-                Circle()
-                    .fill(Color.black)
-                    .frame(width: 2.5, height: 2.5)
+            ForEach(0..<3, id: \.self) { index in
+                Capsule()
+                    .stroke(ink, lineWidth: 1)
+                    .frame(width: 9, height: 4.5)
+                    .rotationEffect(.degrees(Double(index) * 60))
             }
+
+            Circle()
+                .fill(ink)
+                .frame(width: 2, height: 2)
         }
         .overlay {
             RoundedRectangle(cornerRadius: 4, style: .continuous)
-                .stroke(Color.black.opacity(0.75), lineWidth: 0.8)
+                .stroke(ink.opacity(0.65), lineWidth: 0.7)
         }
     }
 }
