@@ -80,7 +80,7 @@ actor CodexAppServer {
             "clientInfo": [
                 "name": "codex_ne_kadar",
                 "title": "Codex Ne Kadar",
-                "version": "1.0.0"
+                "version": "1.0.1"
             ]
         ])
         sendNotification(method: "initialized", params: [:])

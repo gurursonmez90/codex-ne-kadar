@@ -5,7 +5,10 @@ import SwiftUI
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    let monitor = LimitMonitor()
+    let monitor = LimitMonitor(
+        previewMode: CommandLine.arguments.contains("--ui-preview")
+            || CommandLine.arguments.contains("--settings-preview")
+    )
 #if DEBUG
     private var previewWindow: NSWindow?
 #endif
@@ -15,7 +18,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             SelfTest.run()
             exit(0)
         }
-        configureLaunchAtLogin()
+        if !CommandLine.arguments.contains("--ui-preview")
+            && !CommandLine.arguments.contains("--settings-preview") {
+            configureLaunchAtLogin()
+        }
         monitor.start()
 
 #if DEBUG

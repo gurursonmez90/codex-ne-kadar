@@ -18,6 +18,11 @@ final class LimitMonitor: ObservableObject {
     private var evaluator = AlertEvaluator()
     private var hasBaseline = false
     private var hasStarted = false
+    private let previewMode: Bool
+
+    init(previewMode: Bool = false) {
+        self.previewMode = previewMode
+    }
 
     private var thresholds: [Int] {
         Thresholds.parse(UserDefaults.standard.string(forKey: "thresholdsText") ?? Thresholds.defaultText)
@@ -49,6 +54,11 @@ final class LimitMonitor: ObservableObject {
             "alertsEnabled": false
         ])
 
+        if previewMode {
+            loadPreviewData()
+            return
+        }
+
         Task { [weak self] in
             guard let self else { return }
             await server.setHandlers(
@@ -76,10 +86,12 @@ final class LimitMonitor: ObservableObject {
     }
 
     func refresh() {
+        guard !previewMode else { return }
         Task { await server.refresh() }
     }
 
     func restartPolling() {
+        guard !previewMode else { return }
         refreshTask?.cancel()
         refreshTask = nil
         startPolling()
@@ -141,6 +153,33 @@ final class LimitMonitor: ObservableObject {
 
     private func failed(_ message: String) {
         errorMessage = message
+    }
+
+    private func loadPreviewData() {
+        let now = Date()
+        windows = [
+            DisplayWindow(
+                bucketID: "codex",
+                bucketName: "Codex",
+                slot: .primary,
+                usedPercent: 28,
+                resetAt: now.addingTimeInterval(82 * 60),
+                durationMinutes: 300
+            ),
+            DisplayWindow(
+                bucketID: "codex",
+                bucketName: "Codex",
+                slot: .secondary,
+                usedPercent: 56,
+                resetAt: now.addingTimeInterval(4 * 24 * 60 * 60 + 7 * 60 * 60),
+                durationMinutes: 10_080
+            )
+        ]
+        planType = "plus"
+        accountEmail = "demo@localhost"
+        accountType = "chatgpt"
+        lastUpdated = now
+        errorMessage = nil
     }
 }
 

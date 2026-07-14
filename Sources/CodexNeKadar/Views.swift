@@ -184,6 +184,7 @@ final class SettingsWindowManager: NSObject, NSWindowDelegate {
         newWindow.styleMask.insert(.fullSizeContentView)
 
         newWindow.makeKeyAndOrderFront(nil)
+        newWindow.makeFirstResponder(nil)
         NSApp.activate(ignoringOtherApps: true)
         self.window = newWindow
     }
@@ -197,11 +198,47 @@ struct StatusBarLabel: View {
     @ObservedObject var monitor: LimitMonitor
 
     var body: some View {
-        Text(monitor.statusBarTitle)
-            .font(.system(size: 12, weight: .semibold, design: .monospaced))
-            .monospacedDigit()
-            .help(monitor.statusBarHelp)
-            .accessibilityLabel("Codex kalan limitleri: \(monitor.statusBarTitle)")
+        HStack(spacing: 5) {
+            CodexMenuBadge()
+                .frame(width: 17, height: 17)
+                .accessibilityHidden(true)
+
+            Text(monitor.statusBarTitle)
+                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                .monospacedDigit()
+                .foregroundStyle(Color.black)
+        }
+        .help(monitor.statusBarHelp)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Codex kalan limitleri: \(monitor.statusBarTitle)")
+    }
+}
+
+private struct CodexMenuBadge: View {
+    private let red = Color(red: 0.93, green: 0.12, blue: 0.15)
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                .fill(red)
+
+            ZStack {
+                ForEach(0..<3, id: \.self) { index in
+                    Capsule()
+                        .stroke(Color.black, lineWidth: 1.25)
+                        .frame(width: 10, height: 5)
+                        .rotationEffect(.degrees(Double(index) * 60))
+                }
+
+                Circle()
+                    .fill(Color.black)
+                    .frame(width: 2.5, height: 2.5)
+            }
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                .stroke(Color.black.opacity(0.75), lineWidth: 0.8)
+        }
     }
 }
 

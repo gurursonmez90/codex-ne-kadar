@@ -10,6 +10,16 @@ Codex kullanım limitlerini macOS menü çubuğunda gösteren küçük, yerel ve
 
 > Bu proje OpenAI tarafından yayımlanan resmî bir uygulama değildir. Codex'in yerel arayüzündeki değişiklikler uygulamanın çalışmasını etkileyebilir.
 
+## Ekran görüntüleri
+
+### Ana panel
+
+![Codex Ne Kadar ana paneli](docs/screenshots/main-panel.jpg)
+
+### Ayarlar
+
+![Codex Ne Kadar ayarlar ekranı](docs/screenshots/settings.jpg)
+
 ## Gereksinimler
 
 - macOS 13 veya üzeri
@@ -48,21 +58,15 @@ Uygulama ilk çalıştırmada macOS giriş öğelerine otomatik kaydolur. Menü 
 
 Her uyarı; limit penceresi, eşik ve sıfırlanma döngüsü başına yalnızca bir kez gönderilir. İlk okuma başlangıç değeri olarak alınır, dolayısıyla uygulama açılır açılmaz geçmiş kullanım için bildirim yağdırmaz.
 
-## Ekran görüntüsü ekleme
+## Ekran görüntülerini güncelleme
 
-1. Ekran görüntüsünü `docs/screenshots/main.png` olarak kaydedin.
+1. Görselleri `docs/screenshots/main-panel.jpg` ve `docs/screenshots/settings.jpg` olarak kaydedin.
 2. Kişisel e-posta adresi veya başka hassas bilgi görünmediğini kontrol edin.
-3. Bu README'de uygun yere şu satırı ekleyin:
-
-```md
-![Codex Ne Kadar ana paneli](docs/screenshots/main.png)
-```
-
-4. Görseli commit'e ekleyip GitHub'a gönderin:
+3. Görselleri commit'e ekleyip GitHub'a gönderin:
 
 ```zsh
-git add docs/screenshots/main.png README.md
-git commit -m "Add app screenshot"
+git add docs/screenshots README.md
+git commit -m "Update app screenshots"
 git push
 ```
 
