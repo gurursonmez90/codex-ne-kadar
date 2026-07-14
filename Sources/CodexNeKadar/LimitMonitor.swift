@@ -199,7 +199,8 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     func sendLowLimitNotification(for window: DisplayWindow) {
         let content = UNMutableNotificationContent()
         content.title = "Codex limiti azalıyor"
-        content.body = "\(window.label): %\(window.remainingPercent) kaldı. \(window.resetDescription.capitalized) sıfırlanacak."
+        content.body = "\(window.label): %\(window.remainingPercent) kaldı. "
+            + "\(window.resetDescription.capitalized(with: Locale(identifier: "tr_TR"))) sıfırlanacak."
         content.sound = .default
         UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil))
     }

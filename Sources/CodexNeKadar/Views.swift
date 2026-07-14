@@ -2,6 +2,8 @@ import AppKit
 import ServiceManagement
 import SwiftUI
 
+private let turkishLocale = Locale(identifier: "tr_TR")
+
 private enum AvantPalette {
     static let canvas = Color(red: 0.065, green: 0.071, blue: 0.066)
     static let surface = Color(red: 0.105, green: 0.112, blue: 0.104)
@@ -309,7 +311,7 @@ struct LimitPopover: View {
                             .lineLimit(1)
 
                         HStack(spacing: 6) {
-                            Text(monitor.planType?.uppercased() ?? "FREE")
+                            Text(monitor.planType?.uppercased(with: turkishLocale) ?? "FREE")
                                 .font(.system(size: 8, weight: .black, design: .monospaced))
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
@@ -416,7 +418,7 @@ struct LimitPopover: View {
                     .tracking(1.4)
                     .foregroundStyle(AvantPalette.ink)
 
-                Text(monitor.planType?.uppercased() ?? "CANLI LİMİT")
+                Text(monitor.planType?.uppercased(with: turkishLocale) ?? "CANLI LİMİT")
                     .font(.system(size: 9, weight: .medium, design: .monospaced))
                     .tracking(1.1)
                     .foregroundStyle(AvantPalette.muted)
@@ -488,7 +490,7 @@ struct LimitPopover: View {
                     .foregroundStyle(headlineColor)
 
                 if let firstLabel = monitor.windows.first?.label {
-                    Text(firstLabel.uppercased())
+                    Text(firstLabel.uppercased(with: turkishLocale))
                         .font(.system(size: 9, weight: .medium, design: .monospaced))
                         .foregroundStyle(AvantPalette.muted)
                         .padding(.top, 2)
@@ -618,11 +620,14 @@ private struct LimitPanel: View {
     }
 
     private func resetText(relativeTo referenceDate: Date) -> String {
-        guard let resetAt = window.resetAt else { return window.resetDescription.uppercased() }
+        guard let resetAt = window.resetAt else {
+            return window.resetDescription.uppercased(with: turkishLocale)
+        }
         if resetAt <= referenceDate {
             return "ŞİMDİ YENİLENİYOR"
         }
-        return "\(window.resetDescription(relativeTo: referenceDate).uppercased()) SIFIRLANIR"
+        return "\(window.resetDescription(relativeTo: referenceDate)) sıfırlanır"
+            .uppercased(with: turkishLocale)
     }
 
     var body: some View {
@@ -635,7 +640,7 @@ private struct LimitPanel: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(window.label.uppercased())
+                    Text(window.label.uppercased(with: turkishLocale))
                         .font(.system(size: 11, weight: .bold, design: .monospaced))
                         .foregroundStyle(AvantPalette.ink)
                     Text(resetText)
@@ -664,7 +669,10 @@ private struct LimitPanel: View {
         }
         .overlay(Rectangle().stroke(AvantPalette.line, lineWidth: 1))
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(window.label), yüzde \(window.remainingPercent) kaldı, \(resetText.lowercased())")
+        .accessibilityLabel(
+            "\(window.label), yüzde \(window.remainingPercent) kaldı, "
+                + resetText.lowercased(with: turkishLocale)
+        )
     }
 }
 
