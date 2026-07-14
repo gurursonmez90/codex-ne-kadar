@@ -198,19 +198,53 @@ struct StatusBarLabel: View {
     @ObservedObject var monitor: LimitMonitor
 
     var body: some View {
+        Image(nsImage: renderedLabel)
+            .renderingMode(.original)
+            .interpolation(.high)
+            .help(monitor.statusBarHelp)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Codex kalan limitleri: \(monitor.statusBarTitle)")
+    }
+
+    private var renderedLabel: NSImage {
+        let renderer = ImageRenderer(
+            content: StatusBarArtwork(title: monitor.statusBarTitle)
+                .padding(.horizontal, 1)
+                .fixedSize()
+        )
+        renderer.scale = NSScreen.main?.backingScaleFactor ?? 2
+
+        guard let image = renderer.nsImage else { return NSImage() }
+        image.isTemplate = false
+        return image
+    }
+}
+
+private struct StatusBarArtwork: View {
+    let title: String
+
+    private let red = Color(red: 0.93, green: 0.12, blue: 0.15)
+    private var percentages: [String] { title.components(separatedBy: " / ") }
+
+    var body: some View {
         HStack(spacing: 5) {
             CodexMenuBadge()
                 .frame(width: 17, height: 17)
-                .accessibilityHidden(true)
 
-            Text(monitor.statusBarTitle)
-                .font(.system(size: 12, weight: .bold, design: .monospaced))
-                .monospacedDigit()
-                .foregroundStyle(Color.black)
+            HStack(spacing: 3) {
+                ForEach(Array(percentages.enumerated()), id: \.offset) { index, percentage in
+                    if index > 0 {
+                        Text("/")
+                            .foregroundStyle(Color.black)
+                    }
+
+                    Text(percentage)
+                        .foregroundStyle(red)
+                }
+            }
+            .font(.system(size: 12, weight: .bold, design: .monospaced))
+            .monospacedDigit()
         }
-        .help(monitor.statusBarHelp)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Codex kalan limitleri: \(monitor.statusBarTitle)")
     }
 }
 
